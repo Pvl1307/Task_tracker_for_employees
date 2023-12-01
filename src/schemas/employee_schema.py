@@ -12,6 +12,7 @@ class EmployeeCreate(EmployeeBase):
 
 class Employee(EmployeeBase):
     id: int
+    is_busy: bool
 
     class Config:
         orm_mode = True
