@@ -1,4 +1,5 @@
-__all__ = ('Task', 'Employee')
+__all__ = ('Base', 'Task', 'Employee')
 
-from src.models.task import Task
+from src.models.base import Base
 from src.models.employee import Employee
+from src.models.task import Task

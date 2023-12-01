@@ -1,20 +1,20 @@
 from datetime import datetime
+from enum import Enum
 
-from sqlalchemy import Integer, String, Column, ForeignKey, DateTime
+from sqlalchemy import Column, Enum as EnumType, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import ChoiceType
 
-from src.db.database import Base
+from src.models import Base
+
+
+class TaskStatus(str, Enum):
+    NOT_STARTED = 'Not started'
+    STARTED = 'Started'
+    COMPLETED = 'Completed'
+    CANCELLED = 'Cancelled'
 
 
 class Task(Base):
-    STATUSES = [
-        'Not started',
-        'Started',
-        'Completed',
-        'Cancelled'
-    ]
-
     __tablename__ = 'task'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -26,8 +26,8 @@ class Task(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     deadline = Column(DateTime, nullable=False)
 
-    status = Column(ChoiceType(STATUSES), default='Not started')
-    executor_id = Column(Integer, ForeignKey('employees.id'))
+    status = Column(EnumType(TaskStatus, native_enum=False), default=TaskStatus.NOT_STARTED)
+    executor_id = Column(Integer, ForeignKey('employee.id'))
 
     # Relationships
     parent_task = relationship('Task', remote_side='Task.id', backref='subtasks')

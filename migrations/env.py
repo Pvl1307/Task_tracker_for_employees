@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from src.config import DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT
-from src.db.database import Base
+from src.models import Base
 
 config = context.config
 
