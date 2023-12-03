@@ -4,20 +4,24 @@ from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
+    parent_task_id: int = None
     title: str
     description: str
     deadline: datetime
     status: str
+    executor_id: int = None
+
+
+class TaskRead(TaskBase):
+    pass
+
+    class Config:
+        orm_mode = True
 
 
 class TaskCreate(TaskBase):
     pass
 
 
-class Task(TaskBase):
-    id: int
-    parent_task_id: int
-    executor_id: int
-
-    class Config:
-        orm_mode = True
+class TaskUpdate(TaskBase):
+    pass

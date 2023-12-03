@@ -4,15 +4,21 @@ from pydantic import BaseModel
 class EmployeeBase(BaseModel):
     fullname: str
     position: str
+    is_busy: bool = False
+
+
+class EmployeeRead(EmployeeBase):
+    pass
+
+    class Config:
+        orm_mode = True
 
 
 class EmployeeCreate(EmployeeBase):
     pass
 
 
-class Employee(EmployeeBase):
-    id: int
-    is_busy: bool
+class EmployeeUpdate(EmployeeBase):
+    pass
 
-    class Config:
-        orm_mode = True
+
