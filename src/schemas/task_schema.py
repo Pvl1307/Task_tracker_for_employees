@@ -16,7 +16,7 @@ class TaskRead(TaskBase):
     pass
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskCreate(TaskBase):

@@ -11,7 +11,7 @@ class EmployeeRead(EmployeeBase):
     pass
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EmployeeCreate(EmployeeBase):
