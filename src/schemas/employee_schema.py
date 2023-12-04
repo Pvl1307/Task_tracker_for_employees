@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class EmployeeBase(BaseModel):
+    id: int
     fullname: str
     position: str
     is_busy: bool = False

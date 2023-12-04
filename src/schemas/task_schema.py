@@ -1,12 +1,15 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
-    parent_task_id: int = None
+    id: int
+    parent_task_id: Optional[int]
     title: str
     description: str
+    created_at: datetime
     deadline: datetime
     status: str
     executor_id: int = None
