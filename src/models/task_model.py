@@ -18,7 +18,7 @@ class Task(Base):
     __tablename__ = 'task'
 
     id = Column(Integer, primary_key=True, index=True)
-    parent_task_id = Column(Integer, ForeignKey('task.id'))
+    parent_task_id = Column(Integer, ForeignKey('task.id'), nullable=True)
 
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
