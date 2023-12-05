@@ -5,18 +5,17 @@ from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
-    id: int
-    parent_task_id: Optional[int]
+    parent_task_id: Optional[int] = None
     title: str
     description: str
-    created_at: datetime
     deadline: datetime
     status: str
     executor_id: int = None
 
 
 class TaskRead(TaskBase):
-    pass
+    id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True

@@ -1,62 +1,12 @@
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from src.models import Employee, Task
+from src.models import Employee
 from src.schemas.employee_schema import EmployeeCreate, EmployeeUpdate
 
 
 def get_employee(db: Session, employee_id: int):
     """Вывод сотрудника по id (GET)"""
     return db.query(Employee).filter_by(id=employee_id).first()
-
-
-def get_busy_employee(db: Session):
-    """Вывод списка сотрудников и их задачи, отсортированный по количеству активных задач (GET)"""
-    return (db.query(Employee, func.count(Task.id).label('task_count'))
-            .join(Task, Employee.id == Task.executor_id)
-            .filter_by(Employee.is_busy)
-            .group_by(Employee.id)
-            .order_by(func.count(Task.id).desc())
-            .all()
-            )
-
-
-def get_available_employees(db: Session):
-    """Вывод сотрудникам, которые могут взять такие задачи
-    (наименее загруженный сотрудник или сотрудник выполняющий родительскую задачу,
-    если ему назначено максимум на 2 задачи больше,
-    чем у наименее загруженного сотрудника)"""
-    employees_with_tasks_count = (
-        db.query(Employee, func.count(Task.id).label('task_count')
-                 .join(Task, Employee.id == Task.executor_id)
-                 .filter(Employee.is_busy is True)
-                 .groupby(Employee.id)
-                 .all()
-                 )
-    )
-
-    sorted_employees = sorted(employees_with_tasks_count, key=lambda x: x.task_count)
-
-    available_employees = sorted_employees[:2]
-
-    important_tasks = []
-    for employee, task_count in available_employees:
-        tasks = (
-            db.query(Task)
-            .filter(Task.executor_id == employee.id)
-            .filter(Task.status != 'Completed')  # Выбрать невыполненные задачи
-            .order_by(Task.deadline)
-            .all()
-        )
-
-        for task in tasks:
-            important_tasks.append({
-                'Важная задача': task.title,
-                'Срок': task.deadline,
-                'ФИО сотрудника': employee.fullname
-            })
-
-    return important_tasks
 
 
 def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
@@ -98,6 +48,53 @@ def delete_employee(db: Session, employee_id: int):
     if db_employee:
         db.delete(db_employee)
         db.commit()
-        db.refresh(db_employee)
 
     return db_employee
+
+# def get_busy_employee(db: Session):  # Пока не трогал в урлах!!!!!!!
+#     """Вывод списка сотрудников и их задачи, отсортированный по количеству активных задач (GET)"""
+#     return (db.query(Employee, func.count(Task.id).label('task_count'))
+#             .join(Task, Employee.id == Task.executor_id)
+#             .filter_by(Employee.is_busy)
+#             .group_by(Employee.id)
+#             .order_by(func.count(Task.id).desc())
+#             .all()
+#             )
+#
+#
+# def get_available_employees(db: Session):  # Пока не трогал в урлах!!!!!!!
+#     """Вывод сотрудникам, которые могут взять такие задачи
+#     (наименее загруженный сотрудник или сотрудник выполняющий родительскую задачу,
+#     если ему назначено максимум на 2 задачи больше,
+#     чем у наименее загруженного сотрудника)"""
+#     employees_with_tasks_count = (
+#         db.query(Employee, func.count(Task.id).label('task_count')
+#                  .join(Task, Employee.id == Task.executor_id)
+#                  .filter(Employee.is_busy is True)
+#                  .groupby(Employee.id)
+#                  .all()
+#                  )
+#     )
+#
+#     sorted_employees = sorted(employees_with_tasks_count, key=lambda x: x.task_count)
+#
+#     available_employees = sorted_employees[:2]
+#
+#     important_tasks = []
+#     for employee, task_count in available_employees:
+#         tasks = (
+#             db.query(Task)
+#             .filter(Task.executor_id == employee.id)
+#             .filter(Task.status != 'Completed')  # Выбрать невыполненные задачи
+#             .order_by(Task.deadline)
+#             .all()
+#         )
+#
+#         for task in tasks:
+#             important_tasks.append({
+#                 'Важная задача': task.title,
+#                 'Срок': task.deadline,
+#                 'ФИО сотрудника': employee.fullname
+#             })
+#
+#     return important_tasks

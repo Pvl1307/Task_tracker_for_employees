@@ -1,15 +1,16 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class EmployeeBase(BaseModel):
-    id: int
     fullname: str
     position: str
-    is_busy: bool = False
+    is_busy: Optional[bool] = False
 
 
 class EmployeeRead(EmployeeBase):
-    pass
+    id: int
 
     class Config:
         from_attributes = True
@@ -20,6 +21,4 @@ class EmployeeCreate(EmployeeBase):
 
 
 class EmployeeUpdate(EmployeeBase):
-    pass
-
-
+    position: Optional[str] = None
