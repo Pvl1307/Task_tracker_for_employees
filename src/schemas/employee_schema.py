@@ -1,24 +1,29 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
+from src.schemas.task_schema import TaskRead
 
-class EmployeeBase(BaseModel):
+
+class EmployeeRead(BaseModel):
+    id: int
     fullname: str
     position: str
     is_busy: Optional[bool] = False
-
-
-class EmployeeRead(EmployeeBase):
-    id: int
+    tasks: Optional[List[TaskRead]] = None
 
     class Config:
         from_attributes = True
 
 
-class EmployeeCreate(EmployeeBase):
-    pass
+class EmployeeCreate(BaseModel):
+    fullname: str
+    position: str
+    is_busy: Optional[bool] = False
+    tasks: Optional[list[str]] = None
 
 
-class EmployeeUpdate(EmployeeBase):
+class EmployeeUpdate(BaseModel):
+    fullname: str
     position: Optional[str] = None
+    is_busy: Optional[bool] = False
