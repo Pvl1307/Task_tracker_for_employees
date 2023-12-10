@@ -1,5 +1,5 @@
-# Task_tracker_for_employees
-Task tracker for employees
+# Task tracker for employees
+Трекер задач сотрудников
 
 ## Технологии
 ![alt text](https://img.shields.io/badge/fastapi-0.104.1-%23009688?logo=fastapi&labelColor=hsl)
@@ -10,9 +10,19 @@ Task tracker for employees
 
 ## Установка
 
-1. Скачайте проект в домашнюю директорию. ```https://github.com/Pvl1307/Task_tracker_for_employees.git```
-2. Активируйте виртуальное окружение командой: ```poetry shell```
-(Если poetry не установлен, пропишите ```pip install poetry```)
+1. Скачайте проект в домашнюю директорию. 
+```ini
+https://github.com/Pvl1307/Task_tracker_for_employees.git
+```
+2. Активируйте виртуальное окружение командой: 
+```ini
+poetry shell
+```
+Если poetry не установлен, пропишите 
+```ini
+pip install poetry
+```
+
 3. Установите зависимости командой: poetry install.
 
 Создайте Базу данных (в данной работе используется PostgreSQL) и перейдите в src/core/.env.sample и пропишите переменные
@@ -25,14 +35,23 @@ DВ_PASS=postgres
 DB_HOST=localhost
 DB_PORT=5432
 ```
-После создания пропишите команду ```alembic upgrade head```
+После создания пропишите команду 
+```ini
+alembic upgrade head
+```
 ***
 
 ## Работа кода
 
 Зайди в src/main.py и прожмите **RUN** или в терминале пропишите команду 
-* ```python3 src/main.py``` 
-* или ```uvicorn src.main:app --reload```
+```ini
+python3 src/main.py
+```
+ 
+или 
+```ini
+uvicorn src.main:app --reload
+```
 
 ## Для завершения работы
 
