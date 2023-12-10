@@ -1,3 +1,5 @@
+from typing import Union, List, Type
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
@@ -9,17 +11,17 @@ class EmployeeCRUD:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_employee(self, employee_id: int):
+    def get_employee(self, employee_id: int) -> Union[Employee, None]:
         """Вывод сотрудника по id (GET)"""
         return self.db.query(Employee).filter_by(id=employee_id).first()
 
-    def get_all_employees(self, skip: int = 0, limit: int = 100):
+    def get_all_employees(self, skip: int = 0, limit: int = 100) -> List[Type[Employee]]:
         """Вывод всех сотрудников с возможностью пагинации (GET)
         skip - количество, которое нужно в начале пропустить
         limit - лимит сотрудников на вывод"""
         return self.db.query(Employee).offset(skip).limit(limit).all()
 
-    def get_busy_employees(self):
+    def get_busy_employees(self) -> List[Employee]:
         """Запрос сотрудников и их задач, отсортированных по количеству активных задач."""
         query = (
             self.db.query(Employee)
@@ -31,7 +33,7 @@ class EmployeeCRUD:
 
         return query
 
-    def create_employee(self, employee_schema: EmployeeCreate):
+    def create_employee(self, employee_schema: EmployeeCreate) -> Employee:
         """Создание сотрудника (CREATE)"""
         is_busy_value = employee_schema.is_busy if employee_schema.is_busy is not None else False
 
@@ -43,7 +45,7 @@ class EmployeeCRUD:
         self.db.refresh(db_employee)
         return db_employee
 
-    def patch_employee(self, employee_schema: EmployeeUpdate, employee_id: int):
+    def patch_employee(self, employee_schema: EmployeeUpdate, employee_id: int) -> Union[Employee, None]:
         """Обновление сотрудника (PATCH)"""
         db_employee = self.db.query(Employee).filter_by(id=employee_id).first()
 
@@ -55,7 +57,7 @@ class EmployeeCRUD:
 
         return db_employee
 
-    def delete_employee(self, employee_id: int):
+    def delete_employee(self, employee_id: int) -> Union[Employee, None]:
         """Удаление сотрудника (DELETE)"""
         db_employee = self.db.query(Employee).filter_by(id=employee_id).first()
         if db_employee:
