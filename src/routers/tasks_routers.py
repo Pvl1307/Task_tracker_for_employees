@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Type
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -14,7 +14,7 @@ router = APIRouter(
 
 
 @router.get('/{task_id}', response_model=TaskRead)
-def get_task_by_id(task_id: int, db: Session = Depends(get_db)):
+def get_task_by_id(task_id: int, db: Session = Depends(get_db)) -> TaskRead:
     """Вывод задания по id (GET)"""
     try:
         task_crud = TaskCRUD(db=db)
@@ -27,7 +27,7 @@ def get_task_by_id(task_id: int, db: Session = Depends(get_db)):
 
 
 @router.get('/', response_model=List[TaskRead])
-def get_tasks(db: Session = Depends(get_db)):
+def get_tasks(db: Session = Depends(get_db)) -> List[Type[TaskRead]]:
     """Вывод всех заданий (GET)"""
     try:
         task_crud = TaskCRUD(db=db)
@@ -40,7 +40,7 @@ def get_tasks(db: Session = Depends(get_db)):
 
 
 @router.get('/important_tasks/', response_model=List[ImportantTask])
-def get_important_tasks(db: Session = Depends(get_db)):
+def get_important_tasks(db: Session = Depends(get_db)) -> List[ImportantTask]:
     """Вывод задач, не взятых в работу, и сотрудников, способных взять их (GET)"""
     try:
         task_crud = TaskCRUD(db=db)
@@ -48,24 +48,6 @@ def get_important_tasks(db: Session = Depends(get_db)):
         if not important_tasks:
             raise HTTPException(status_code=404, detail='No important tasks founded')
         return important_tasks
-
-        # results = []
-        # for important_task in important_tasks:
-        #     executors = []
-        #     for employee in important_task.executor_names:
-        #         employee_crud = EmployeeCRUD(db=db)
-        #         employee = employee_crud.get_employee(employee)
-        #         executors.append(employee.fullname)
-        #
-        #     results.append({
-        #         'id': important_task.id,
-        #         'title': important_task.title,
-        #         'description': important_task.description,
-        #         'deadline': important_task.deadline,
-        #         'executors': executors,
-        #     })
-        #
-        # return results
     except HTTPException as e:
         print(f"Exception details: {e.detail}")
         raise e
@@ -74,10 +56,8 @@ def get_important_tasks(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail='Internal Server Error')
 
 
-
-
 @router.post('/', response_model=TaskRead)
-def create_tsk(task_schema: TaskCreate, db: Session = Depends(get_db)):
+def create_tsk(task_schema: TaskCreate, db: Session = Depends(get_db)) -> TaskRead:
     """Создание задания (POST)"""
     try:
         task_crud = TaskCRUD(db=db)
@@ -87,8 +67,8 @@ def create_tsk(task_schema: TaskCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.patch('/{task_id}', response_model=TaskRead)
-def patch_tsk(task_schema: TaskUpdate, task_id: int, db: Session = Depends(get_db)):
+@router.patch('/{task_id}/', response_model=TaskRead)
+def patch_tsk(task_schema: TaskUpdate, task_id: int, db: Session = Depends(get_db)) -> TaskRead:
     """Обновление задания (PATCH)"""
     try:
         task_crud = TaskCRUD(db=db)
@@ -98,8 +78,8 @@ def patch_tsk(task_schema: TaskUpdate, task_id: int, db: Session = Depends(get_d
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.delete('/{task_id}')
-def delete_tsk(task_id: int, db: Session = Depends(get_db)):
+@router.delete('/{task_id}/')
+def delete_tsk(task_id: int, db: Session = Depends(get_db)) -> TaskRead:
     """Удаление задания (DELETE)"""
     try:
         task_crud = TaskCRUD(db=db)

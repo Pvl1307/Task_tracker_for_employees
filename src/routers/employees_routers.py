@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Type
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -13,8 +13,8 @@ router = APIRouter(
 )
 
 
-@router.get('/{employee_id}', response_model=EmployeeRead)
-def get_employee_by_id(employee_id: int, db: Session = Depends(get_db)):
+@router.get('/{employee_id}/', response_model=EmployeeRead)
+def get_employee_by_id(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
     """Вывод сотрудника по id (GET)"""
     try:
         employee_crud = EmployeeCRUD(db=db)
@@ -27,7 +27,7 @@ def get_employee_by_id(employee_id: int, db: Session = Depends(get_db)):
 
 
 @router.get('/', response_model=List[EmployeeRead])
-def get_employees(db: Session = Depends(get_db)):
+def get_employees(db: Session = Depends(get_db)) -> List[Type[EmployeeRead]]:
     """Вывод всех сотрудников (GET)"""
     try:
         employee_crud = EmployeeCRUD(db=db)
@@ -40,7 +40,7 @@ def get_employees(db: Session = Depends(get_db)):
 
 
 @router.get('/busy_employees/', response_model=List[EmployeeRead])
-def get_busy_employees(db: Session = Depends(get_db)):
+def get_busy_employees(db: Session = Depends(get_db)) -> List[EmployeeRead]:
     """Запрашивает из БД список всех сотрудников и их задач, отсортированный по количеству активных задач."""
     try:
         employee_crud = EmployeeCRUD(db=db)
@@ -55,8 +55,8 @@ def get_busy_employees(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post('/', summary='title func', tags=['post'], description='test description', response_model=EmployeeRead)
-def create_emp(employee_schema: EmployeeCreate, db: Session = Depends(get_db)):
+@router.post('/', response_model=EmployeeRead)
+def create_emp(employee_schema: EmployeeCreate, db: Session = Depends(get_db)) -> EmployeeRead:
     """Создание сотрудника (CREATE)"""
     try:
         employee_crud = EmployeeCRUD(db=db)
@@ -66,8 +66,8 @@ def create_emp(employee_schema: EmployeeCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.patch('/{employee_id}', summary='title func', tags=['post'], response_model=EmployeeRead)
-def patch_emp(employee: EmployeeUpdate, employee_id: int, db: Session = Depends(get_db)):
+@router.patch('/{employee_id}/', response_model=EmployeeRead)
+def patch_emp(employee: EmployeeUpdate, employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
     """Обновление сотрудника (PATCH)"""
     try:
         employee_crud = EmployeeCRUD(db=db)
@@ -77,8 +77,8 @@ def patch_emp(employee: EmployeeUpdate, employee_id: int, db: Session = Depends(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.delete('/{employee_id}')
-def delete_emp(employee_id: int, db: Session = Depends(get_db)):
+@router.delete('/{employee_id}/')
+def delete_emp(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
     """Удаление сотрудника (DELETE)"""
     try:
         employee_crud = EmployeeCRUD(db=db)
