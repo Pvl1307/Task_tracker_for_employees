@@ -6,6 +6,7 @@
 ![alt text](https://img.shields.io/badge/pydantic-2.5.2-%23E92063?logo=pydantic&labelColor=hsl)
 ![alt text](https://img.shields.io/badge/alembic-1.12.1-%23E95420?logo=alembic&labelColor=hsl)
 ![alt text](https://img.shields.io/badge/sqlalchemy-2.0.23-%23D71F00?logo=sqlalchemy)
+![alt text]([https://img.shields.io/badge/sqlalchemy-2.0.23-%23D71F00?logo=sqlalchemy](https://img.shields.io/badge/swagger-1.7.1-%2385EA2D?logo=swagger))
 
 
 ## Установка
