@@ -39,7 +39,7 @@ def get_employees(db: Session = Depends(get_db)) -> List[Type[EmployeeRead]]:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get('/busy_employees/', response_model=List[EmployeeRead])
+@router.get('/busy_employees', response_model=List[EmployeeRead])
 def get_busy_employees(db: Session = Depends(get_db)) -> List[EmployeeRead]:
     """Запрашивает из БД список всех сотрудников и их задач, отсортированный по количеству активных задач."""
     try:
